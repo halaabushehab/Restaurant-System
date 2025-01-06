@@ -1,1 +1,3 @@
 # Restaurant-System
+
+#### Local Storage is a browser storage technique used to save data persistently, even after closing the page or browser. In this project, I will create a webpage that includes a header with a navigation bar and a main section containing a form to collect user data (full name, password, date of birth, gender, phone number, order type, and order option). The page will be styled attractively using CSS, and in the JavaScript file, I will create a render function to read the form data after submission, store the orders in an array, and save them in local storage to ensure data persistence.
