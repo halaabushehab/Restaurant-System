@@ -8,6 +8,8 @@ submit_btn.addEventListener('click', (e) => {
   e.preventDefault();
 
   const fullName = document.getElementById('name').value;
+  const emailInput = document.getElementById('email').value;
+
   const password = document.getElementById('Password').value;
   const dateOfBirth = document.getElementById('birthday').value;
   const gender = document.getElementById('gender').value;
@@ -30,14 +32,83 @@ submit_btn.addEventListener('click', (e) => {
   }
 
   const newCustomer = new Customer(fullName, password, dateOfBirth, gender, phoneNumber, orderType, orderOption);
+//=======================================validation===================================
+
+
+ 
+
+  // Validation
+  if (fullName === '' || /\s/.test(fullName)) {
+    alert('Please enter your name without spaces.');
+    return;
+  }
+
+console.log('name entered:', fullName);
+
+  
+const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{9,}$/;
+
+const trimmedPassword = password.trim();
+if (!passwordRegex.test(trimmedPassword)) {
+  alert('Password must be at least 9 characters long, contain an uppercase letter, a number, and a special character.');
+  return;
+}
+console.log('Password entered:', password);
+
+
+
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+if (!emailRegex.test(emailInput)) {
+  alert('Please enter a valid email address.');
+  isValid=false;
+  return;
+}
+console.log('email entered:', emailInput);
+
+
+
+if (!dateOfBirth) {
+  alert("Please select your date of birth.");
+  return;
+}
+
+console.log('bitrhday entered:', dateOfBirth);
+
+
+const phoneRegex = /^07\d{8}$/;
+
+if (!phoneRegex.test(phoneNumber)) {
+  alert("Phone number must start with '07' and be exactly 10 digits long.");
+  return;
+}
+
+console.log('phone entered:', phoneNumber);
+
+  // Check if the user already exists
+  const existingCustomer = customers.find((customer) => customer.fullName === fullName);
+  if (existingCustomer) {
+    alert(`The username "${fullName}" is already registered. Please use a different username.`);
+    return;
+  }
+
+
+
 
 //========================local storge========================//
-  let customers = JSON.parse(localStorage.getItem('customers')) || [];
-  customers.push(newCustomer);
-  localStorage.setItem('customers', JSON.stringify(customers));
 
-  renderCustomerCard(newCustomer);
+let customers = JSON.parse(localStorage.getItem('customers')) || [];
+customers.push(newCustomer);
+
+
+localStorage.setItem('customers', JSON.stringify(customers));
+renderCustomerCard(newCustomer);
+
 });
+
+
+
+
+
 
 //===================================================================//
 function Customer(fullName ,password, dateOfBirth , gender,phoneNumber , orderType  ,  orderOption , imageURL="blank-profile-picture-973460_640.webp" ){
@@ -57,8 +128,7 @@ function renderCustomerCard(customer) {
   
   //=================================card1=========================
   const card1 = document.createElement('div');
-    card1.classList.add('card');
-  
+    card1.classList="card";
     const cardBody1 = document.createElement('div');
     cardBody1.classList.add('card-body');
   
