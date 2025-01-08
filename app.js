@@ -1,4 +1,4 @@
-//===============================================================//
+
 const submit_btn = document.getElementById('submit_btn');
 const result = document.getElementById('result');
 const cardTitle = document.getElementById('card-title');
@@ -9,29 +9,17 @@ submit_btn.addEventListener('click', (e) => {
 
   const fullName = document.getElementById('name').value;
   const emailInput = document.getElementById('email').value;
-
   const password = document.getElementById('Password').value;
   const dateOfBirth = document.getElementById('birthday').value;
   const gender = document.getElementById('gender').value;
   const phoneNumber = document.getElementById('phone').value;
 
-  let orderType = '';
-  if (document.getElementById('shawerma').checked) {
-    orderType = document.getElementById('shawerma').value;
-  } else if (document.getElementById('zinger').checked) {
-    orderType = document.getElementById('zinger').value;
-  } else if (document.getElementById('burger').checked) {
-    orderType = document.getElementById('burger').value;
-  }
-  let orderOption = '';
-  if (document.getElementById('sandwich').checked) {
-    orderOption += 'Sandwich ';
-  }
-  if (document.getElementById('combo').checked) {
-    orderOption += 'Combo';
-  }
+  let customers = JSON.parse(localStorage.getItem('customers')) || [];
 
-  const newCustomer = new Customer(fullName, password, dateOfBirth, gender, phoneNumber, orderType, orderOption);
+  const isDuplicate = customers.some(
+    customer => customer.fullName === fullName
+  );
+
 //=======================================validation===================================
 
 
@@ -91,38 +79,62 @@ console.log('phone entered:', phoneNumber);
     return;
   }
 
+//===========================================================================================
 
 
+  if (isDuplicate) {
+    alert("This name is already registered. Please use a different name.");
+    return; 
+  }
 
-//========================local storge========================//
+  let orderType = '';
+  if (document.getElementById('shawerma').checked) {
+    orderType = document.getElementById('shawerma').value;
+  } else if (document.getElementById('zinger').checked) {
+    orderType = document.getElementById('zinger').value;
+  } else if (document.getElementById('burger').checked) {
+    orderType = document.getElementById('burger').value;
+  }
 
-let customers = JSON.parse(localStorage.getItem('customers')) || [];
-customers.push(newCustomer);
+  let orderOption = '';
+  if (document.getElementById('sandwich').checked) {
+    orderOption += 'Sandwich ';
+  }
+  if (document.getElementById('combo').checked) {
+    orderOption += 'Combo';
+  }
 
 
-localStorage.setItem('customers', JSON.stringify(customers));
-renderCustomerCard(newCustomer);
+  const newCustomer = new Customer(fullName, password, dateOfBirth, gender, phoneNumber, orderType, orderOption);
 
+  customers.push(newCustomer);
+  localStorage.setItem('customers', JSON.stringify(customers));
+  renderCustomerCard(newCustomer);
 });
 
+//================================= Customer function ===================================
 
+function Customer(
+  fullName,
+  password,
+  dateOfBirth,
+  gender,
+  phoneNumber,
+  orderType,
+  orderOption,
+  imageURL = "blank-profile-picture-973460_640.webp"
+) {
+  this.fullName = fullName;
+  this.password = password;
+  this.dateOfBirth = dateOfBirth;
+  this.gender = gender;
+  this.orderType = orderType;
+  this.orderOption = orderOption;
+  this.phoneNumber = phoneNumber;
+  this.imageURL = imageURL;
+}
 
-
-
-
-//===================================================================//
-function Customer(fullName ,password, dateOfBirth , gender,phoneNumber , orderType  ,  orderOption , imageURL="blank-profile-picture-973460_640.webp" ){
-        this.fullName = fullName;
-        this.password = password;
-        this.dateOfBirth = dateOfBirth;
-        this.gender = gender;
-        this.orderType = orderType;
-        this.orderOption = orderOption;
-        this.phoneNumber = phoneNumber;
-        this.imageURL = imageURL;
-
-
-     }
+//============================ FUNCTION to render Customer ===========================
 //============================FUNCTION===========================
 function renderCustomerCard(customer) {
   
@@ -157,7 +169,7 @@ function renderCustomerCard(customer) {
   
   
   
-  
+
   
     //======================card2==================================
     const card2 = document.createElement('div');
